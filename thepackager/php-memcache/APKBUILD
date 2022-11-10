@@ -1,0 +1,32 @@
+pkgname=php-memcache
+_extname=memcache
+pkgver=8.0
+pkgrel=0
+pkgdesc="This extension allows you to work with memcached through handy OO and procedural interfaces."
+url="https://pecl.php.net/package/memcache"
+arch="all"
+license="PHP-3.0"
+makedepends="php-dev zlib-dev"
+source="https://pecl.php.net/get/$_extname-$pkgver.tgz"
+builddir=$srcdir/$_extname-$pkgver
+
+build() {
+  cd $builddir
+	phpize
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+    --prefix=/usr
+
+	make
+}
+
+package() {
+	make INSTALL_ROOT="$pkgdir" install
+	mkdir -p "$pkgdir/etc/php/conf.d"
+	echo 'extension=memcache.so' | tee "$pkgdir/etc/php/conf.d/memcache.ini"
+}
+
+sha512sums="
+d5eea13b85d8d35ef6aab8c5699bdcc4707cf8debf4052cbbeac26e7e2360a4d3d4e55e8bd0b40cf19fe014ba1fc42d5417deabbe22a199f0c6aa98b67d132d4  memcache-8.0.tgz
+"

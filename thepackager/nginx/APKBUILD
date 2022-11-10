@@ -1,0 +1,71 @@
+pkgname=nginx
+pkgver=1.22.1
+pkgrel=1
+pkgdesc='The open source web server that powers more than 400 million websites.'
+url="https://nginx.com/"
+arch="all"
+license="GPL 2.0"
+
+ZLIB_VERSION=1.2.13
+OPENSSL_VERSION=3.0.5
+PCRE_VERSION=10.40
+
+source="https://nginx.org/download/nginx-$pkgver.tar.gz
+https://zlib.net/zlib-$ZLIB_VERSION.tar.gz
+https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz
+https://github.com/PCRE2Project/pcre2/releases/download/pcre2-$PCRE_VERSION/pcre2-$PCRE_VERSION.tar.gz
+"
+
+makedepends="linux-headers perl"
+install="$pkgname.pre-install"
+
+nginx_config="\
+    --sbin-path=/usr/sbin/nginx \
+    --conf-path=/etc/nginx/nginx.conf \
+    --pid-path=/var/run/nginx.pid \
+    --http-log-path=/dev/stdout \
+    --error-log-path=/dev/stderr \
+    \
+    --with-ld-opt=--static \
+    \
+    --http-client-body-temp-path=/tmp/client_temp \
+    --http-proxy-temp-path=/tmp/proxy_temp \
+    --http-fastcgi-temp-path=/tmp/fastcgi_temp \
+    --http-uwsgi-temp-path=/tmp/uwsgi_temp \
+    --http-scgi-temp-path=/tmp/scgi_temp \
+    \
+    --with-pcre=$srcdir/pcre2-$PCRE_VERSION \
+    --with-openssl=$srcdir/openssl-$OPENSSL_VERSION \
+    --with-zlib=$srcdir/zlib-$ZLIB_VERSION \
+    --with-file-aio \
+    --with-http_v2_module \
+    --with-http_ssl_module \
+    --with-http_stub_status_module \
+    --with-stream \
+    --with-stream_ssl_module \
+    --with-threads \
+    \
+    --without-mail_pop3_module \
+    --without-mail_imap_module \
+    --without-mail_smtp_module"
+
+build() {
+  ./configure $nginx_config
+  make
+}
+
+package() {
+	DESTDIR="$pkgdir" make install
+  mkdir -p $pkgdir/usr/share
+  mv $pkgdir/usr/local/nginx $pkgdir/usr/share
+  rmdir $pkgdir/usr/local
+  # The '/dev' directory is a result of logging to '/dev/stdout'.
+  rmdir $pkgdir/dev
+}
+
+sha512sums="
+1d468dcfa9bbd348b8a5dc514ac1428a789e73a92384c039b73a51ce376785f74bf942872c5594a9fcda6bbf44758bd727ce15ac2395f1aa989c507014647dcc  nginx-1.22.1.tar.gz
+99f0e843f52290e6950cc328820c0f322a4d934a504f66c7caa76bd0cc17ece4bf0546424fc95135de85a2656fed5115abb835fd8d8a390d60ffaf946c8887ad  zlib-1.2.13.tar.gz
+782b0df3d0252468aa696bd74a3b661810499819c0df849aa9698ba0e06a845820dc856aac650fced4be234f1271e576d4317ac3ab1406cf0ffe087d695d20fe  openssl-3.0.5.tar.gz
+679c6f540571850adec880934812e4f26f08ad858c776f10d1ed68ed3c0d4f91f6e1b53d781b53340af43a22c521e585cfc908f3659013c630a320e4fb246dc2  pcre2-10.40.tar.gz
+"

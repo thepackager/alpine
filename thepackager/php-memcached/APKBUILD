@@ -1,0 +1,32 @@
+pkgname=php-memcached
+_extname=memcached
+pkgver=3.2.0
+pkgrel=0
+pkgdesc="This extension allows you to work with memcached through handy OO and procedural interfaces."
+url="https://pecl.php.net/package/$_extname"
+arch="all"
+license="PHP-3.0"
+makedepends="php-dev libmemcached-dev"
+source="https://pecl.php.net/get/$_extname-$pkgver.tgz"
+builddir=$srcdir/$_extname-$pkgver
+
+build() {
+  cd $builddir
+	phpize
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+    --prefix=/usr
+
+	make
+}
+
+package() {
+	make INSTALL_ROOT="$pkgdir" install
+	mkdir -p "$pkgdir/etc/php/conf.d"
+	echo 'extension=memcached.so' | tee "$pkgdir/etc/php/conf.d/memcached.ini"
+}
+
+sha512sums="
+ece5759a9d6d52afd46beb0821811e5d4830e75ad8564af395e2107fd349e271c6e6cf20eeacd9ad15ee2e99ccf0118ccc83c5810e2f3fa7c61f1984b0b26514  memcached-3.2.0.tgz
+"

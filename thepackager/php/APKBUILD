@@ -1,0 +1,273 @@
+pkgname=php
+pkgver=8.1.11
+pkgrel=2
+pkgdesc="The PHP 8.1 language runtime engine"
+apcuver=5.1.22
+url="https://www.php.net/"
+arch="all"
+license="PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0"
+# depends_dev="$pkgname=$pkgver-r$pkgrel autoconf pcre2-dev re2c"
+
+subpackages="$pkgname-dev $pkgname-cli $pkgname-fpm $pkgname-phar $pkgname-doc $pkgname-opcache"
+
+source="https://php.net/distributions/php-$pkgver.tar.xz
+https://pecl.php.net/get/apcu-$apcuver.tgz
+readline_cli.patch
+"
+
+install="$pkgname-fpm.pre-install"
+
+# builddir="$srcdir/php-$pkgver"
+_libdir="/usr/lib/$pkgname"
+
+makedepends="
+	$depends_dev
+xz
+musl-dev
+argon2-dev
+argon2-static
+aspell-dev
+autoconf
+automake
+bison
+brotli-static
+bzip2-dev
+bzip2-static
+curl-dev
+curl-static
+enchant2-dev
+freetds-dev
+freetype-dev
+freetype-static
+gcc
+gmp-dev
+icu-dev
+icu-static
+imap-dev
+krb5-dev
+libavif-dev
+libc-dev
+libgcrypt-dev
+libgcrypt-static
+libgpg-error-static
+libjpeg-turbo-dev
+libjpeg-turbo-static
+libpng-dev
+libpng-static
+libpq-dev
+libsodium-dev
+libsodium-static
+libtool
+libwebp-dev
+libwebp-static
+libx11-static
+libxcb-static
+libxdmcp-dev
+libxml2-dev
+libxpm-dev
+libxslt-dev
+libzip-dev
+libzip-static
+make
+ncurses-dev
+ncurses-static
+net-snmp-dev
+nghttp2-static
+oniguruma-dev
+openldap-dev
+openssl-libs-static
+re2c
+readline-dev
+readline-static
+sqlite-dev
+sqlite-static
+tidyhtml-dev
+tidyhtml-static
+unixodbc-dev
+zlib-static
+zstd-static"
+
+_additional_libs="-l:libstdc++.a -l:libdl.a -l:libgcrypt.a -l:libgpg-error.a -l:libnghttp2.a -l:libpq.a -l:libpgport.a -l:libpgcommon.a -l:libreadline.a -l:libssl.a -l:libcrypto.a -l:libbrotlidec.a -l:libbrotlicommon.a -l:liblzma.a -l:libxcb.a -l:libXau.a -l:libXdmcp.a -l:libzstd.a"
+
+prepare() {
+	default_prepare
+
+  # Drop Windows-specific headers.
+	rm -f TSRM/tsrm_win32.h \
+    		TSRM/tsrm_config.w32.h \
+	    	Zend/zend_config.w32.h \
+  	  	ext/mysqlnd/config-win.h \
+    		ext/standard/winver.h
+
+  # Clean and re-unpack apcu.
+  test -d $srcdir/php-$pkgver/ext/apcu && rm -r $srcdir/php-$pkgver/ext/apcu
+  mv $srcdir/apcu-$apcuver $srcdir/php-$pkgver/ext/apcu
+
+	./buildconf --force
+}
+
+_configure() {
+  LIBS=$_additional_libs \
+  ./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+    \
+    --prefix=/usr \
+    --exec-prefix=/usr \
+    --sysconfdir=/etc/php \
+    --with-config-file-path=/etc/php/ \
+    --with-config-file-scan-dir=/etc/php/conf.d/ \
+    \
+    --disable-short-tags \
+    --enable-zts \
+    --enable-static \
+    --with-pic=yes \
+    --enable-libgcc \
+    \
+    --enable-bcmath \
+    --with-bz2 \
+    --enable-calendar \
+    --enable-ctype \
+    --with-curl \
+    --enable-dom \
+    --enable-fileinfo \
+    --enable-gd \
+    --with-freetype \
+    --with-jpeg \
+    --with-webp \
+    --with-xpm \
+    --disable-gd-jis-conv \
+    --with-iconv \
+    --enable-intl \
+    --with-libxml \
+    --enable-mbstring \
+    --with-openssl  \
+    --with-system-ciphers \
+    --enable-pcntl \
+    --enable-pdo \
+    --with-pdo-mysql=mysqlnd \
+    --with-pdo-pgsql \
+    --with-pdo-sqlite \
+    --with-pgsql \
+    --enable-phar \
+    --enable-posix \
+    --enable-session \
+    --enable-simplexml \
+    --enable-soap \
+    --with-sodium \
+    --enable-sockets \
+    --with-sqlite3 \
+    --with-tidy \
+    --enable-tokenizer \
+    --enable-xml \
+    --enable-xmlreader \
+    --enable-xmlwriter \
+    --with-xsl \
+    --with-zip \
+    --with-zlib \
+    --enable-apcu \
+    "$@"
+
+    # Patch Makefile to prefer static includes over shared libraries.
+    _current=$(grep -E '^EXTRA_LIBS ?=.+$' Makefile)
+    _new=$(echo "$_current" | sed -E 's@-l([^ :]+)@-l:lib\1.a@g')
+    _new="$_new $_additional_libs"
+    sed -i "s#$_current#$_new#" Makefile
+}
+
+
+build() {
+  # Configure for CLI
+  _configure \
+    --disable-cgi \
+    --disable-phpdbg \
+    --disable-fpm \
+    --without-apxs2 \
+    --with-readline
+
+  # Keep a copy of the Makefile available for debugging.
+  cp "$builddir/Makefile" "$builddir/Makefile-cli"
+  make -j$(nproc)
+
+  # Configure for FPM
+  _configure \
+    --disable-cli \
+    --disable-cgi \
+    --disable-phpdbg \
+    --enable-fpm \
+    --without-apxs2 \
+    --without-readline
+
+  make -j$(nproc)
+}
+
+package() {
+	make -j1 INSTALL_ROOT="$pkgdir" install
+  find $pkgdir -type d -empty -delete
+}
+
+dev() {
+  depends_dev="$pkgname-cli=$pkgver-r$pkgrel autoconf pcre2-dev re2c"
+	default_dev
+
+  mkdir -p "$subpkgdir/$_libdir"
+	mv "$pkgdir/$_libdir/build"  "$subpkgdir/$_libdir/"
+  mv "$pkgdir/usr/bin/phpize"  "$subpkgdir"/usr/bin/phpize
+}
+
+cli() {
+	pkgdesc="$pkgdesc (CLI)"
+
+  mkdir -p "$subpkgdir"/usr/bin
+  install -D -m 755 "$builddir"/sapi/cli/php \
+		                "$subpkgdir"/usr/bin/php
+
+  mkdir -p "$subpkgdir"/etc/php/conf.d
+}
+
+fpm() {
+	pkgdesc="$pkgdesc (FPM)"
+
+  mkdir -p "$subpkgdir"/usr/sbin
+  mkdir -p "$subpkgdir"/etc/php
+
+	mv "$pkgdir"/usr/sbin/php-fpm             "$subpkgdir"/usr/sbin
+	mv "$pkgdir"/etc/php/php-fpm.d            "$subpkgdir"/etc/php
+	mv "$pkgdir"/etc/php/php-fpm.conf.default "$subpkgdir"/etc/php
+}
+
+phar() {
+	pkgdesc="$pkgdesc (Phar)"
+  arch="all"
+
+  install -D -m 755 "$builddir"/ext/phar/phar.phar \
+		                "$subpkgdir"/usr/bin/phar.phar
+
+  cd "$subpkgdir"/usr/bin
+  ln -s phar.phar ./phar
+}
+
+doc() {
+  mkdir -p "$subpkgdir"
+  default_doc
+}
+
+opcache() {
+  pkgdesc="$pkgdesc (Opcache)"
+
+  dir=`find "$pkgdir" -type f -name 'opcache.so' -exec dirname '{}' \;`
+  targ=`echo "$dir" | sed -E "s@^$pkgdir/@@"`
+  mkdir -p "$subpkgdir"
+  mkdir -p "$subpkgdir"/"$targ"
+  mv "$dir"/opcache.so "$subpkgdir"/"$targ"
+
+  # Add an ini file.
+	mkdir -p "$subpkgdir/etc/php/conf.d"
+	echo 'zend_extension=opcache.so' | tee "$subpkgdir/etc/php/conf.d/opcache.ini"
+}
+
+sha512sums="
+2a9eb4642b4077077f6551ca9a40fd2c48272cc1ee443117362331259efbec88bad0141b09f7a9ff710cde044f9463e1e668f7066b2429ea4274dec7291725cc  php-8.1.11.tar.xz
+064e0a1b2a7282cb4ee67f1a7b03f7087d2c87c563d09023074648ee4ab42d20b422942376ce4af712b016b1ae68b2dbc01698f0ac1ac306cf9f2eaa543e42f7  readline_cli.patch
+8f2f4292679bc359ea680ecaf397d69de32bf67d57d719a4839a026ab1b96d5ec4725e92c5c0d1972a117a7cd3d3c456a1f4ec03192fda4657e685de60b9e93e  apcu-5.1.22.tgz
+"

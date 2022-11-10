@@ -1,0 +1,19 @@
+pkgname=acli
+pkgver=2.5.3
+pkgrel=1
+pkgdesc='The official command-line tool for interacting with the Acquia Drupal Cloud Platform and services.'
+url="https://github.com/acquia/cli/"
+arch="all"
+license="GPL 2.0"
+depends="php-cli"
+source="https://github.com/acquia/cli/releases/download/${pkgver}/acli.phar"
+
+package() {
+  mkdir -p "$pkgdir"/usr/bin
+  cp "$srcdir"/acli.phar "$pkgdir"/usr/bin/acli
+  chmod +x "$pkgdir"/usr/bin/acli
+}
+
+sha512sums="
+86dda26af89c91751e0f6fb9f3b9c9dd9ffaef2f291272e673cf677d73f4ee0b11fb256c0bedeee90e4cc9ad6c9ee28172f34a1ab8bc737be2bb37d47403cc83  acli.phar
+"

@@ -1,0 +1,19 @@
+pkgname=drush-launcher
+pkgver=0.10.1
+pkgrel=1
+pkgdesc='A small wrapper around Drush for your global $PATH.'
+url="https://github.com/drush-ops/drush-launcher/"
+arch="all"
+license="GPL 2.0"
+depends="php-cli"
+source="https://github.com/drush-ops/drush-launcher/releases/download/${pkgver}/drush.phar"
+
+package() {
+  mkdir -p "$pkgdir"/usr/bin
+  cp "$srcdir"/drush.phar "$pkgdir"/usr/bin/drush
+  chmod +x "$pkgdir"/usr/bin/drush
+}
+
+sha512sums="
+73456d685c028fd23c87b53e864906958c91c50b14059cb79bc88eccf098e495eba3ecfe27c962786a8639124f7a2359af8d6f4ecf180b457a3856d046802018  drush.phar
+"

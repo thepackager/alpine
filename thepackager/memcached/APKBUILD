@@ -1,0 +1,62 @@
+pkgname=memcached
+pkgver=1.6.17
+pkgrel=0
+pkgdesc="Distributed memory object caching system"
+url="https://memcached.org/"
+arch="all"
+license="BSD-3-Clause"
+makedepends="bsd-compat-headers \
+             cyrus-sasl-dev \
+             cyrus-sasl-static \
+             e2fsprogs-static \
+             gdbm-dev \
+             libevent-dev \
+             libevent-static \
+             libgssglue-dev \
+             libseccomp-dev \
+             libseccomp-static \
+             linux-headers \
+             openssl-libs-static \
+             sqlite-static"
+install="$pkgname.pre-install"
+
+subpackages="$pkgname-doc $pkgname-dev"
+source="https://www.memcached.org/files/memcached-$pkgver.tar.gz"
+
+_libs="-lgdbm \
+       -lcrypto \
+       -lgssapi \
+       -lheimntlm \
+       -lkrb5 \
+       -lheimbase \
+       -lhx509 \
+       -lasn1 \
+       -lroken \
+       -lwind \
+       -lsqlite3 \
+       -lcom_err \
+       -lhcrypto"
+
+build() {
+  local _add_libs
+  _add_libs=$(echo "$_libs" | tr -d "\n")
+
+  LIBS="$_add_libs" ./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--enable-sasl \
+		--enable-sasl-pwdb \
+		--enable-seccomp \
+    --enable-static
+
+	make
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+90ddd1e0dac3eb27273c1ee0bf6a7f75248f0267bca37b88455ff48727ab4f9db07382484d1e0c9b4a0126198b147f53aea4c993259ac608e8de393e11dad673  memcached-1.6.17.tar.gz
+"

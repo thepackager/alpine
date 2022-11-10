@@ -1,0 +1,6 @@
+#!/bin/sh
+
+getent group www-data || addgroup -S -g 82 www-data 2>/dev/null
+getent passwd www-data || adduser  -S -u 82 -D -H -h /var/www -s /sbin/nologin -G www-data www-data 2>/dev/null
+
+exit 0

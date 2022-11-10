@@ -1,0 +1,27 @@
+# Contributor: Jacob Hoffman-Andrews <github@hoffman-andrews.com>
+# Maintainer: Marcus Deglos <marcus@deglos.com>
+pkgname=minica
+pkgver=1.0.2
+pkgrel=0
+pkgdesc="MiniCA is a simple CA for managing certicates in controlled environments."
+url="https://github.com/jsha/minica"
+arch="all"
+license="MIT"
+
+makedepends="go"
+
+source="$pkgname-$pkgver.tar.gz::https://github.com/jsha/minica/archive/refs/tags/v$pkgver.tar.gz"
+
+build() {
+  go build \
+    -ldflags '-linkmode external -extldflags="-static"'
+}
+
+package() {
+  install -D -m 755 "$builddir"/minica \
+		                "$pkgdir"/usr/bin/minica
+}
+
+sha512sums="
+6654a8e90dcef58ab33cfc5037b61830ce4d6ac78d6546321433988973b15655951ff472732dc3a45183b6d3bd504cde275a248341375b4d58863af0cffef844  minica-1.0.2.tar.gz
+"

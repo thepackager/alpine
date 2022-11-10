@@ -1,0 +1,32 @@
+pkgname=php-xdebug
+_extname=xdebug
+pkgver=3.1.5
+pkgrel=0
+pkgdesc="Xdebug is a debugging and productivity extension for PHP."
+url="https://pecl.php.net/package/$_extname"
+arch="all"
+license="PHP-3.0"
+makedepends="php-dev"
+source="https://pecl.php.net/get/$_extname-$pkgver.tgz"
+builddir=$srcdir/$_extname-$pkgver
+
+build() {
+  cd $builddir
+	phpize
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+    --prefix=/usr
+
+	make
+}
+
+package() {
+	make INSTALL_ROOT="$pkgdir" install
+	mkdir -p "$pkgdir/etc/php/conf.d"
+	echo 'zend_extension=xdebug.so' | tee "$pkgdir/etc/php/conf.d/xdebug.ini"
+}
+
+sha512sums="
+882d4033ee6e71a6b861aa7b98c2cdf06bbbc3fcd9f064f2c59391df2efe647a5ad7a5373960847cc6568b88aa2ca85e2ddba53d3c4c1d627b57b9923d222f90  xdebug-3.1.5.tgz
+"

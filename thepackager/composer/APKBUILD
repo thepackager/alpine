@@ -1,0 +1,20 @@
+# Contributor: Nathan Johnson <nathan@nathanjohnson.info>
+# Maintainer: Dave Hall <skwashd@gmail.com>
+pkgname=composer
+pkgver=2.4.4
+pkgrel=0
+pkgdesc="Dependency manager for PHP"
+url="https://getcomposer.org/"
+arch="all"
+license="MIT"
+depends="php-cli"
+options="net"
+source="$pkgname-$pkgver.phar::https://getcomposer.org/download/$pkgver/composer.phar"
+
+package() {
+	install -m 0755 -D "$srcdir"/$pkgname-$pkgver.phar "$pkgdir"/usr/bin/$pkgname
+}
+
+sha512sums="
+349b50d4b0c5736b4eb0f087f771013728598069ff27b9779f933d6d45aa049ecd00c7277c30f481c3afd06a67c65d83e9514c49a174a939724aa09688a529bb  composer-2.4.4.phar
+"

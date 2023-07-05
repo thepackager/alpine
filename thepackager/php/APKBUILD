@@ -1,5 +1,5 @@
 pkgname=php
-pkgver=8.1.11
+pkgver=8.2.6
 pkgrel=2
 pkgdesc="The PHP 8.1 language runtime engine"
 apcuver=5.1.22
@@ -23,6 +23,7 @@ _libdir="/usr/lib/$pkgname"
 makedepends="
 	$depends_dev
 xz
+xz-static
 musl-dev
 argon2-dev
 argon2-static
@@ -50,6 +51,7 @@ libc-dev
 libgcrypt-dev
 libgcrypt-static
 libgpg-error-static
+libidn2-static
 libjpeg-turbo-dev
 libjpeg-turbo-static
 libpng-dev
@@ -58,14 +60,17 @@ libpq-dev
 libsodium-dev
 libsodium-static
 libtool
+libunistring-static
 libwebp-dev
 libwebp-static
 libx11-static
 libxcb-static
 libxdmcp-dev
 libxml2-dev
+libxml2-static
 libxpm-dev
 libxslt-dev
+libxslt-static
 libzip-dev
 libzip-static
 make
@@ -87,7 +92,7 @@ unixodbc-dev
 zlib-static
 zstd-static"
 
-_additional_libs="-l:libstdc++.a -l:libdl.a -l:libgcrypt.a -l:libgpg-error.a -l:libnghttp2.a -l:libpq.a -l:libpgport.a -l:libpgcommon.a -l:libreadline.a -l:libssl.a -l:libcrypto.a -l:libbrotlidec.a -l:libbrotlicommon.a -l:liblzma.a -l:libxcb.a -l:libXau.a -l:libXdmcp.a -l:libzstd.a"
+_additional_libs="-l:libstdc++.a -l:libdl.a -l:libgcrypt.a -l:libgpg-error.a -l:libnghttp2.a -l:libpq.a -l:libpgport.a -l:libpgcommon.a -l:libreadline.a -l:libssl.a -l:libcrypto.a -l:libbrotlidec.a -l:libbrotlicommon.a -l:liblzma.a -l:libxcb.a -l:libXau.a -l:libXdmcp.a -l:libzstd.a -l:libidn2.a -l:libunistring.a -l:libsharpyuv.a"
 
 prepare() {
 	default_prepare
@@ -267,7 +272,7 @@ opcache() {
 }
 
 sha512sums="
-2a9eb4642b4077077f6551ca9a40fd2c48272cc1ee443117362331259efbec88bad0141b09f7a9ff710cde044f9463e1e668f7066b2429ea4274dec7291725cc  php-8.1.11.tar.xz
-064e0a1b2a7282cb4ee67f1a7b03f7087d2c87c563d09023074648ee4ab42d20b422942376ce4af712b016b1ae68b2dbc01698f0ac1ac306cf9f2eaa543e42f7  readline_cli.patch
+a935aa6edf4a79a68f6976427c1bd9af4677304b9005045fe2a12d0677dce9c4370fd747da4e6bdd15c52f4714daea66a3e16160c09573bd3bae4e0e5b974392  php-8.2.6.tar.xz
 8f2f4292679bc359ea680ecaf397d69de32bf67d57d719a4839a026ab1b96d5ec4725e92c5c0d1972a117a7cd3d3c456a1f4ec03192fda4657e685de60b9e93e  apcu-5.1.22.tgz
+064e0a1b2a7282cb4ee67f1a7b03f7087d2c87c563d09023074648ee4ab42d20b422942376ce4af712b016b1ae68b2dbc01698f0ac1ac306cf9f2eaa543e42f7  readline_cli.patch
 "

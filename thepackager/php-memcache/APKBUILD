@@ -1,6 +1,6 @@
 pkgname=php-memcache
 _extname=memcache
-pkgver=8.0
+pkgver=8.2
 pkgrel=0
 pkgdesc="This extension allows you to work with memcached through handy OO and procedural interfaces."
 url="https://pecl.php.net/package/memcache"
@@ -28,5 +28,5 @@ package() {
 }
 
 sha512sums="
-d5eea13b85d8d35ef6aab8c5699bdcc4707cf8debf4052cbbeac26e7e2360a4d3d4e55e8bd0b40cf19fe014ba1fc42d5417deabbe22a199f0c6aa98b67d132d4  memcache-8.0.tgz
+937f6bf33cd9202751585a2817c658bb2d361b0cef013cb6ac17ee147e07a1ca7860dc73902a607a147cd7ecfaf50cc0f3cb6758338afd29e688bc85ca59a2ba  memcache-8.2.tgz
 "

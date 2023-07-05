@@ -1,12 +1,12 @@
 pkgname=php-xdebug
 _extname=xdebug
-pkgver=3.1.5
+pkgver=3.2.1
 pkgrel=0
 pkgdesc="Xdebug is a debugging and productivity extension for PHP."
 url="https://pecl.php.net/package/$_extname"
 arch="all"
 license="PHP-3.0"
-makedepends="php-dev"
+makedepends="php-dev linux-headers"
 source="https://pecl.php.net/get/$_extname-$pkgver.tgz"
 builddir=$srcdir/$_extname-$pkgver
 
@@ -28,5 +28,5 @@ package() {
 }
 
 sha512sums="
-882d4033ee6e71a6b861aa7b98c2cdf06bbbc3fcd9f064f2c59391df2efe647a5ad7a5373960847cc6568b88aa2ca85e2ddba53d3c4c1d627b57b9923d222f90  xdebug-3.1.5.tgz
+c9e9ee7aa42dd3e29ba8f6ed6d9e1442419d93e28bd3eb8a97463bfe8570b6c3bf7935ed6cf9f4de06c7fdff7d98af6d9aada72f73219dbc4e2de520b1f52173  xdebug-3.2.1.tgz
 "

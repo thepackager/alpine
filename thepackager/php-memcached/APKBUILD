@@ -1,7 +1,7 @@
 pkgname=php-memcached
 _extname=memcached
 pkgver=3.2.0
-pkgrel=0
+pkgrel=1
 pkgdesc="This extension allows you to work with memcached through handy OO and procedural interfaces."
 url="https://pecl.php.net/package/$_extname"
 arch="all"

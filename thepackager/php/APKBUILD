@@ -1,7 +1,7 @@
 pkgname=php
-pkgver=8.2.6
-pkgrel=2
-pkgdesc="The PHP 8.1 language runtime engine"
+pkgver=8.2.12
+pkgrel=3
+pkgdesc="The PHP 8.2 language runtime engine"
 apcuver=5.1.22
 url="https://www.php.net/"
 arch="all"
@@ -272,7 +272,7 @@ opcache() {
 }
 
 sha512sums="
-a935aa6edf4a79a68f6976427c1bd9af4677304b9005045fe2a12d0677dce9c4370fd747da4e6bdd15c52f4714daea66a3e16160c09573bd3bae4e0e5b974392  php-8.2.6.tar.xz
+d3fa01ade4094cb2a1b36f1d0bbfdf7c590997e13566ffcfdbd5a307b30ad9456099116f44fe2d612158a0017d9f05346932ce47768c760c7cfacfa56acf294e  php-8.2.12.tar.xz
 8f2f4292679bc359ea680ecaf397d69de32bf67d57d719a4839a026ab1b96d5ec4725e92c5c0d1972a117a7cd3d3c456a1f4ec03192fda4657e685de60b9e93e  apcu-5.1.22.tgz
 064e0a1b2a7282cb4ee67f1a7b03f7087d2c87c563d09023074648ee4ab42d20b422942376ce4af712b016b1ae68b2dbc01698f0ac1ac306cf9f2eaa543e42f7  readline_cli.patch
 "

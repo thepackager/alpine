@@ -1,13 +1,13 @@
 pkgname=nginx
-pkgver=1.22.1
+pkgver=1.24.0
 pkgrel=1
 pkgdesc='The open source web server that powers more than 400 million websites.'
 url="https://nginx.com/"
 arch="all"
 license="GPL 2.0"
 
-ZLIB_VERSION=1.2.13
-OPENSSL_VERSION=3.0.5
+ZLIB_VERSION=1.3
+OPENSSL_VERSION=3.0.11
 PCRE_VERSION=10.40
 
 source="https://nginx.org/download/nginx-$pkgver.tar.gz
@@ -64,8 +64,8 @@ package() {
 }
 
 sha512sums="
-1d468dcfa9bbd348b8a5dc514ac1428a789e73a92384c039b73a51ce376785f74bf942872c5594a9fcda6bbf44758bd727ce15ac2395f1aa989c507014647dcc  nginx-1.22.1.tar.gz
-99f0e843f52290e6950cc328820c0f322a4d934a504f66c7caa76bd0cc17ece4bf0546424fc95135de85a2656fed5115abb835fd8d8a390d60ffaf946c8887ad  zlib-1.2.13.tar.gz
-782b0df3d0252468aa696bd74a3b661810499819c0df849aa9698ba0e06a845820dc856aac650fced4be234f1271e576d4317ac3ab1406cf0ffe087d695d20fe  openssl-3.0.5.tar.gz
+1114e37de5664a8109c99cfb2faa1f42ff8ac63c932bcf3780d645e5ed32c0b2ac446f80305b4465994c8f9430604968e176ae464fd80f632d1cb2c8f6007ff3  nginx-1.24.0.tar.gz
+185795044461cd78a5545250e06f6efdb0556e8d1bfe44e657b509dd6f00ba8892c8eb3febe65f79ee0b192d6af857f0e0055326d33a881449f3833f92e5f8fb  zlib-1.3.tar.gz
+393e7262cce0e7980d1cbba861291c8791f6c2a290e9867895c4310ab6e16b449067d8b780ae6081dc8d42529a4f32d545c66e8b1e69d301281d92f1882c85b7  openssl-3.0.11.tar.gz
 679c6f540571850adec880934812e4f26f08ad858c776f10d1ed68ed3c0d4f91f6e1b53d781b53340af43a22c521e585cfc908f3659013c630a320e4fb246dc2  pcre2-10.40.tar.gz
 "

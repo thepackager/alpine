@@ -1,7 +1,7 @@
 # Contributor: Nathan Johnson <nathan@nathanjohnson.info>
 # Maintainer: Dave Hall <skwashd@gmail.com>
 pkgname=composer
-pkgver=2.4.4
+pkgver=2.6.5
 pkgrel=0
 pkgdesc="Dependency manager for PHP"
 url="https://getcomposer.org/"
@@ -16,5 +16,5 @@ package() {
 }
 
 sha512sums="
-349b50d4b0c5736b4eb0f087f771013728598069ff27b9779f933d6d45aa049ecd00c7277c30f481c3afd06a67c65d83e9514c49a174a939724aa09688a529bb  composer-2.4.4.phar
+dd51b3ad7649713e129b293e910157b24a4e3fee8c0d90c85275c3fbc41d568cd8f326ca671f0f92c64b59d0d92969bccc1aca5d4caf45d74d359862230ed678  composer-2.6.5.phar
 "

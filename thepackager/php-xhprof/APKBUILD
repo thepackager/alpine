@@ -1,0 +1,51 @@
+pkgname=php-xhprof
+_extname=xhprof
+pkgver=2.3.9
+pkgrel=0
+pkgdesc="XHProf is a function-level hierarchical profiler for PHP."
+url="https://github.com/longxinH/xhprof"
+arch="all"
+license="PHP-3.0"
+makedepends="php-dev linux-headers"
+# Fetching the `.zip` version because the `tar.gz` version doesn't extract properly.
+source="$pkgname-$pkgver.zip::https://github.com/longxinH/$_extname/archive/refs/tags/v$pkgver.zip"
+subpackages="$pkgname-web-application:web_application:noarch"
+
+builddir=$srcdir/$_extname-$pkgver
+applicationdir="/usr/lib/$pkgname"
+
+build() {
+  cd $builddir/extension
+	phpize
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+    --prefix=/usr
+
+	make
+}
+
+web_application() {
+    pkgdesc="XHProf web application"
+
+    mkdir -p "$subpkgdir$applicationdir"
+
+    mv "$builddir/xhprof_html" "$subpkgdir$applicationdir"
+    mv "$builddir/xhprof_lib"  "$subpkgdir$applicationdir"
+
+    chmod -R o-w "$subpkgdir$applicationdir"
+}
+
+package() {
+	make -C $builddir/extension INSTALL_ROOT="$pkgdir" install
+
+	mkdir -p "$pkgdir/etc/php/conf.d"
+	echo 'zend_extension=xhprof.so' | tee "$pkgdir/etc/php/conf.d/xhprof.ini"
+	echo 'xhprof.output_dir = /tmp/xhprof' | tee -a "$pkgdir/etc/php/conf.d/xhprof.ini"
+
+	mkdir -p "$pkgdir/tmp/xhprof"
+}
+
+sha512sums="
+d61ebf5abfea48a65a041efb32c44798f403a77f36baf54e9cb6007789f913d8f2312b0845d45b1ea7fa396fe9228cce122b15bce0eeccfeb3efb87f1da40342  php-xhprof-2.3.9.zip
+"

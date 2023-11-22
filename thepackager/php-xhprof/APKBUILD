@@ -40,7 +40,7 @@ package() {
 	make -C $builddir/extension INSTALL_ROOT="$pkgdir" install
 
 	mkdir -p "$pkgdir/etc/php/conf.d"
-	echo 'zend_extension=xhprof.so' | tee "$pkgdir/etc/php/conf.d/xhprof.ini"
+	echo 'extension=xhprof.so' | tee "$pkgdir/etc/php/conf.d/xhprof.ini"
 	echo 'xhprof.output_dir = /tmp/xhprof' | tee -a "$pkgdir/etc/php/conf.d/xhprof.ini"
 
 	mkdir -p "$pkgdir/tmp/xhprof"
